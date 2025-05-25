@@ -2,131 +2,34 @@
 <html>
 <head>
   <meta charset="UTF-8" />
-  <title>Bloody Palace Viewer</title>
+  <title>DMCBP</title>
   <style>
-    body {
-      font-family: sans-serif;
-      margin: 0;
-      display: flex;
-      height: 100vh;
-      overflow: hidden;
-    }
-    #sidebar {
-      width: 250px;
-      background: #222;
-      color: white;
-      padding: 10px;
-      box-sizing: border-box;
-      overflow-y: auto;
-    }
-    #sidebar h2 {
-      margin-top: 0;
-      font-size: 1.5em;
-      border-bottom: 1px solid #555;
-      padding-bottom: 10px;
-    }
-    #modeSwitch button {
-      width: 100%;
-      margin: 5px 0;
-      padding: 10px;
-      font-size: 16px;
-      cursor: pointer;
-      background: #444;
-      color: white;
-      border: none;
-    }
-    #modeSwitch button.active {
-      background: #0088ff;
-    }
-    #content {
-      flex-grow: 1;
-      padding: 20px;
-      box-sizing: border-box;
-      overflow-y: auto;
-      background: #f0f0f0;
-    }
-    label {
-      display: block;
-      margin: 10px 0 5px;
-      font-weight: bold;
-    }
-    select,
-    input[type="checkbox"] {
-      margin-right: 10px;
-      transform: scale(1.2);
-      vertical-align: middle;
-    }
-    button {
-      padding: 10px 15px;
-      margin: 10px 10px 10px 0;
-      font-size: 16px;
-      cursor: pointer;
-    }
-    img.card {
-      max-width: 90vw;
-      max-height: 70vh;
-      margin-top: 20px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.3);
-    }
-    #modeNote {
-      font-weight: bold;
-      margin: 15px 0;
-    }
-    #enemyList {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      max-height: 70vh;
-      overflow-y: auto;
-    }
-    #enemyList li {
-      cursor: pointer;
-      padding: 8px;
-      border-bottom: 1px solid #444;
-      user-select: none;
-    }
-    #enemyList li:hover,
-    #enemyList li.active {
-      background: #0088ff;
-    }
-    #enemyDetails {
-      display: flex;
-      flex-wrap: nowrap;
-      gap: 10px;
-      margin-top: 20px;
-      align-items: center;
-    }
-    #enemyDetails img {
-      max-height: 300px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.2);
-    }
-    #enemyRef {
-      max-width: 40vw;
-    }
-    #enemyCard {
-      max-width: 40vw;
-      position: relative;
-    }
-    #enemyControls {
-      margin-top: 10px;
-    }
-    #enemyControls button {
-      padding: 8px 12px;
-      font-size: 14px;
-      margin-right: 10px;
-      cursor: pointer;
-    }
+    body { font-family: sans-serif; text-align: center; padding: 20px; }
+    img { max-width: 90vw; margin-top: 20px; }
+    button, select, label { margin: 10px; padding: 10px; font-size: 16px; }
+    #modeNote { margin-top: 20px; font-weight: bold; }
+    #sidebar { position: fixed; left: 0; top: 0; bottom: 0; width: 200px; overflow-y: auto; background: #eee; padding: 10px; }
+    #content { margin-left: 220px; }
+    .enemy-name { cursor: pointer; padding: 5px; border-bottom: 1px solid #ccc; text-align: left; }
+    .enemy-name:hover { background: #ddd; }
+    #enemyViewer img { max-width: 40vw; max-height: 300px; margin: 10px; vertical-align: top; }
   </style>
 </head>
 <body>
-  <div id="sidebar">
-    <h2>Mode</h2>
-    <div id="modeSwitch">
-      <button id="bpModeBtn" class="active">Bloody Palace Deck</button>
-      <button id="enemyModeBtn">Enemy Viewer</button>
-    </div>
+  <h1>DMCBP</h1>
 
-    <div id="bpControls">
+  <div>
+    <button onclick="switchMode('bloodyPalace')">Bloody Palace Deck</button>
+    <button onclick="switchMode('enemyViewer')">Enemy Viewer</button>
+  </div>
+
+  <div id="sidebar" style="display:none;">
+    <h3>Enemies</h3>
+    <div id="enemyList"></div>
+  </div>
+
+  <div id="content">
+    <div id="bloodyPalaceMode">
       <label>Players:
         <select id="players">
           <option value="1">1</option>
@@ -136,47 +39,47 @@
         </select>
       </label>
 
-      <label><input type="checkbox" class="expansion" value="wa" checked /> Walking Arsenal</label>
-      <label><input type="checkbox" class="expansion" value="ao" checked /> Alpha & Omega</label>
+      <div>
+        <label><input type="checkbox" class="expansion" value="wa" checked> Walking Arsenal</label>
+        <label><input type="checkbox" class="expansion" value="ao" checked> Alpha & Omega</label>
+      </div>
 
-      <label><input type="checkbox" id="extendedMode" /> Extended Run Mode (AO only)</label>
-      <label><input type="checkbox" id="hyperextendedMode" /> Hyperextended Run Mode (WA + AO)</label>
+      <div>
+        <label><input type="checkbox" id="extendedMode"> Extended Run Mode (AO only)</label><br>
+        <label><input type="checkbox" id="hyperextendedMode"> Hyperextended Run Mode (WA + AO)</label>
+      </div>
 
-      <button onclick="newGame()">New Game</button>
-      <button onclick="nextLevel()">Next Level</button>
+      <div>
+        <button onclick="newGame()">New Game</button>
+        <button onclick="nextLevel()">Next Level</button>
+      </div>
 
       <div id="modeNote"></div>
+      <div id="currentLevel"><p>Click "New Game" to start</p></div>
     </div>
 
-    <div id="enemyControlsContainer" style="display:none;">
-      <h2>Enemies</h2>
-      <ul id="enemyList"></ul>
-    </div>
-  </div>
-
-  <div id="content">
-    <div id="currentLevel"><p>Click "New Game" to start</p></div>
-    <div id="enemyDetails" style="display:none;">
-      <img id="enemyRef" src="" alt="Enemy Reference" />
-      <div id="enemyCardContainer">
+    <div id="enemyViewer" style="display:none;">
+      <div>
+        <img id="enemyRef" src="" alt="Enemy Ref Image" />
         <img id="enemyCard" src="" alt="Enemy Card" />
-        <div id="enemyControls">
-          <button id="enemyNext">Next</button>
-          <button id="enemyShuffle">Shuffle</button>
-        </div>
+      </div>
+      <div>
+        <button onclick="enemyNext()">Next Card</button>
+        <button onclick="enemyShuffle()">Shuffle Deck</button>
       </div>
     </div>
   </div>
 
   <script>
-    let manifest = {}, deck = [], idx = 0;
+    // Globals
+    let manifest = {};
+    let deck = [], idx = 0;
+    let enemyDecks = {};
+    let currentEnemy = null;
 
     async function loadManifest() {
-      try {
-        manifest = await fetch("manifest.json").then(res => res.json());
-      } catch (e) {
-        console.error("Error loading manifest.json:", e);
-      }
+      manifest = await fetch("manifest.json").then(res => res.json());
+      populateEnemyList();
     }
     loadManifest();
 
@@ -228,6 +131,25 @@
       updateModeNote();
     });
 
+    function updateModeNote() {
+      const exps = [...document.querySelectorAll(".expansion:checked")].map(e => e.value);
+      const extended = document.getElementById("extendedMode").checked;
+      const hyper = document.getElementById("hyperextendedMode").checked;
+      let note = "";
+
+      if (hyper) note = "Even more bosses than Extended. Reduces the number of red orbs dropped by all enemies by 2 to a minimum of 1.";
+      else if (extended) note = "More bosses. Reduces the number of red orbs dropped by all enemies by 1 to a minimum of 1.";
+      else if (exps.includes("wa") && exps.includes("ao")) note = "Both WA and AO expansions active.";
+      else if (exps.includes("wa")) note = "Walking Arsenal expansion active.";
+      else if (exps.includes("ao")) note = "Alpha & Omega expansion active.";
+      else note = "Base game only.";
+
+      document.getElementById("modeNote").textContent = note;
+    }
+
+    updateExtendedCheckboxes();
+    updateModeNote();
+
     function getDeck(players, exps, extended, hyperextended) {
       let d = [];
 
@@ -238,8 +160,10 @@
              : "level5";
       };
 
+      // Starter
       d.push(getFromLevel("starter", exps, `${players}p_`));
 
+      // Base levels
       let levelA = getFromLevel(
         players === 1 ? "level1" :
         players === 2 ? "level2" :
@@ -255,6 +179,7 @@
       d.push(levelA);
       d.push(levelB);
 
+      // Boss logic
       if (hyperextended || extended) {
         d.push("cards/boss/boss1.jpg");
       } else {
@@ -316,6 +241,7 @@
       const p = parseInt(document.getElementById("players").value);
       let exps = [...document.querySelectorAll(".expansion:checked")].map(e => e.value);
 
+      // Auto add wao
       if (exps.includes("wa") && exps.includes("ao")) {
         exps.push("wao");
       }
@@ -323,188 +249,157 @@
       const extended = document.getElementById("extendedMode").checked;
       const hyper = document.getElementById("hyperextendedMode").checked;
 
+      updateModeNote();
+
       deck = getDeck(p, exps, extended, hyper);
       idx = 0;
-      showCurrentLevel();
-      updateModeNote();
+      show(deck[idx]);
+      saveDeckToLocalStorage();
     }
 
     function nextLevel() {
-      if (deck.length === 0) {
-        alert("Start a new game first!");
-        return;
-      }
       idx++;
-      if (idx >= deck.length) idx = deck.length - 1;
-      showCurrentLevel();
-    }
-
-    function showCurrentLevel() {
-      const container = document.getElementById("currentLevel");
-      if (deck.length === 0) {
-        container.innerHTML = "<p>No deck loaded</p>";
-        return;
+      if (idx >= deck.length) {
+        document.getElementById("currentLevel").innerHTML = "<p>Game Over</p>";
+      } else {
+        show(deck[idx]);
       }
-      let imgPath = deck[idx];
-      container.innerHTML = `<img class="card" src="${imgPath}" alt="Level Card" />`;
+      saveDeckToLocalStorage();
     }
 
-    function updateModeNote() {
-      const exps = [...document.querySelectorAll(".expansion:checked")].map(e => e.value);
-      const extended = document.getElementById("extendedMode").checked;
-      const hyper = document.getElementById("hyperextendedMode").checked;
-      let note = "";
-
-      if (hyper) note = "Hyperextended Run Mode enabled: More levels, bosses, and red orbs.";
-      else if (extended) note = "Extended Run Mode enabled: More AO levels, bosses, and red orbs.";
-      else if (exps.includes("wa") && exps.includes("ao")) note = "Both WA and AO expansions active.";
-      else if (exps.includes("wa")) note = "Walking Arsenal expansion active.";
-      else if (exps.includes("ao")) note = "Alpha & Omega expansion active.";
-      else note = "Base game only.";
-
-      document.getElementById("modeNote").textContent = note;
+    function show(path) {
+      document.getElementById("currentLevel").innerHTML = `<img src="${path}">`;
     }
 
-    updateExtendedCheckboxes();
-    updateModeNote();
+    function saveDeckToLocalStorage() {
+      localStorage.setItem("bloodyPalaceDeck", JSON.stringify(deck));
+      localStorage.setItem("bloodyPalaceIndex", idx);
+    }
 
-    // ----- Enemy Viewer -----
-    let enemies = {};
-    let currentEnemy = null;
-    let enemyDeck = [];
-    let enemyIdx = 0;
-
-    const enemyListEl = document.getElementById("enemyList");
-    const enemyRefEl = document.getElementById("enemyRef");
-    const enemyCardEl = document.getElementById("enemyCard");
-    const enemyDetailsEl = document.getElementById("enemyDetails");
-
-    async function loadEnemies() {
-      try {
-        enemies = await fetch("enemies.json").then(res => res.json());
-        populateEnemyList();
-      } catch (e) {
-        console.error("Error loading enemies.json:", e);
+    function loadDeckFromLocalStorage() {
+      const savedDeck = JSON.parse(localStorage.getItem("bloodyPalaceDeck"));
+      const savedIndex = parseInt(localStorage.getItem("bloodyPalaceIndex"));
+      if (savedDeck && savedIndex >= 0 && savedIndex < savedDeck.length) {
+        deck = savedDeck;
+        idx = savedIndex;
+        show(deck[idx]);
       }
     }
+
+    // Enemy Viewer code
 
     function populateEnemyList() {
-      enemyListEl.innerHTML = "";
-      Object.keys(enemies).forEach(name => {
-        const li = document.createElement("li");
-        li.textContent = name;
-        li.onclick = () => selectEnemy(name);
-        enemyListEl.appendChild(li);
-      });
-    }
-
-    function saveEnemyState() {
-      if (!currentEnemy) return;
-      const state = JSON.parse(localStorage.getItem("enemyState") || "{}");
-      state[currentEnemy] = {
-        deck: enemyDeck,
-        index: enemyIdx,
-      };
-      localStorage.setItem("enemyState", JSON.stringify(state));
-    }
-
-    function loadEnemyState(name) {
-      const state = JSON.parse(localStorage.getItem("enemyState") || "{}");
-      if (state[name]) {
-        enemyDeck = state[name].deck;
-        enemyIdx = state[name].index;
-        return true;
+      const enemyListDiv = document.getElementById("enemyList");
+      enemyListDiv.innerHTML = "";
+      for (const enemyName in manifest.enemies) {
+        const div = document.createElement("div");
+        div.className = "enemy-name";
+        div.textContent = enemyName;
+        div.onclick = () => selectEnemy(enemyName);
+        enemyListDiv.appendChild(div);
       }
-      return false;
     }
 
-    function selectEnemy(name) {
-      if (currentEnemy) saveEnemyState();
+    function selectEnemy(enemyName) {
+      currentEnemy = enemyName;
 
-      currentEnemy = name;
-      if (!loadEnemyState(name)) {
-        enemyDeck = [...enemies[name]];
-        shuffleArray(enemyDeck);
-        enemyIdx = 0;
+      if (!enemyDecks[currentEnemy]) {
+        enemyDecks[currentEnemy] = shuffleArray(
+          manifest.enemies[currentEnemy].map(i => `enemies/${encodeURIComponent(enemyName)}/${i}`)
+        );
       }
 
-      highlightSelectedEnemy();
+      idxEnemy = 0;
+      saveEnemyDecks();
       showEnemyCard();
-      enemyDetailsEl.style.display = "flex";
-
-      enemyRefEl.src = `enemies/${name}/ref.jpg`;
-      enemyRefEl.alt = `${name} Reference Image`;
+      showEnemyRef();
     }
 
-    function highlightSelectedEnemy() {
-      [...enemyListEl.children].forEach(li => {
-        li.classList.toggle("active", li.textContent === currentEnemy);
-      });
-    }
+    let idxEnemy = 0;
 
     function showEnemyCard() {
-      if (!enemyDeck.length) return;
-      const cardFile = enemyDeck[enemyIdx];
-      enemyCardEl.src = `enemies/${currentEnemy}/${cardFile}`;
-      enemyCardEl.alt = `${currentEnemy} Card ${cardFile}`;
-
-      saveEnemyState();
+      if (!currentEnemy) return;
+      const deck = enemyDecks[currentEnemy];
+      if (!deck || deck.length === 0) return;
+      document.getElementById("enemyCard").src = deck[idxEnemy];
     }
 
-    function enemyNextCard() {
-      if (!enemyDeck.length) return;
-      enemyIdx = (enemyIdx + 1) % enemyDeck.length;
-      showEnemyCard();
+    function showEnemyRef() {
+      if (!currentEnemy) return;
+      document.getElementById("enemyRef").src = `enemies/${encodeURIComponent(currentEnemy)}/ref.jpg`;
     }
 
-    function enemyShuffleDeck() {
-      if (!enemyDeck.length) return;
-      shuffleArray(enemyDeck);
-      enemyIdx = 0;
+    function enemyNext() {
+      if (!currentEnemy) return;
+      idxEnemy++;
+      if (idxEnemy >= enemyDecks[currentEnemy].length) idxEnemy = 0;
       showEnemyCard();
+      saveEnemyDecks();
+    }
+
+    function enemyShuffle() {
+      if (!currentEnemy) return;
+      enemyDecks[currentEnemy] = shuffleArray(enemyDecks[currentEnemy]);
+      idxEnemy = 0;
+      showEnemyCard();
+      saveEnemyDecks();
+    }
+
+    function saveEnemyDecks() {
+      localStorage.setItem("enemyDecks", JSON.stringify(enemyDecks));
+      localStorage.setItem("enemyIdx", JSON.stringify({ enemy: currentEnemy, index: idxEnemy }));
+    }
+
+    function loadEnemyDecks() {
+      let savedDecks = localStorage.getItem("enemyDecks");
+      let savedIdx = localStorage.getItem("enemyIdx");
+      if (savedDecks) enemyDecks = JSON.parse(savedDecks);
+      if (savedIdx) {
+        const data = JSON.parse(savedIdx);
+        currentEnemy = data.enemy;
+        idxEnemy = data.index || 0;
+      }
     }
 
     function shuffleArray(arr) {
       for (let i = arr.length - 1; i > 0; i--) {
-        let j = Math.floor(Math.random() * (i + 1));
+        const j = Math.floor(Math.random() * (i + 1));
         [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function switchMode(mode) {
+      if (mode === "bloodyPalace") {
+        document.getElementById("bloodyPalaceMode").style.display = "block";
+        document.getElementById("enemyViewer").style.display = "none";
+        document.getElementById("sidebar").style.display = "none";
+        saveCurrentMode("bloodyPalace");
+      } else {
+        document.getElementById("bloodyPalaceMode").style.display = "none";
+        document.getElementById("enemyViewer").style.display = "block";
+        document.getElementById("sidebar").style.display = "block";
+        saveCurrentMode("enemyViewer");
+        if (currentEnemy) {
+          showEnemyRef();
+          showEnemyCard();
+        }
       }
     }
 
-    document.getElementById("enemyNext").onclick = enemyNextCard;
-    document.getElementById("enemyShuffle").onclick = enemyShuffleDeck;
+    function saveCurrentMode(mode) {
+      localStorage.setItem("currentMode", mode);
+    }
 
-    loadEnemies();
+    function loadCurrentMode() {
+      const mode = localStorage.getItem("currentMode") || "bloodyPalace";
+      switchMode(mode);
+    }
 
-    // ----- Mode Switching -----
-    const bpModeBtn = document.getElementById("bpModeBtn");
-    const enemyModeBtn = document.getElementById("enemyModeBtn");
-    const bpControls = document.getElementById("bpControls");
-    const enemyControlsContainer = document.getElementById("enemyControlsContainer");
-    const currentLevel = document.getElementById("currentLevel");
-
-    bpModeBtn.onclick = () => {
-      bpModeBtn.classList.add("active");
-      enemyModeBtn.classList.remove("active");
-      bpControls.style.display = "block";
-      enemyControlsContainer.style.display = "none";
-      currentLevel.style.display = "block";
-      enemyDetailsEl.style.display = "none";
-      if (currentEnemy) saveEnemyState();
-    };
-
-    enemyModeBtn.onclick = () => {
-      enemyModeBtn.classList.add("active");
-      bpModeBtn.classList.remove("active");
-      bpControls.style.display = "none";
-      enemyControlsContainer.style.display = "block";
-      currentLevel.style.display = "none";
-
-      if (currentEnemy) {
-        enemyDetailsEl.style.display = "flex";
-      } else {
-        enemyDetailsEl.style.display = "none";
-      }
+    window.onload = () => {
+      loadDeckFromLocalStorage();
+      loadEnemyDecks();
+      loadCurrentMode();
     };
   </script>
 </body>
