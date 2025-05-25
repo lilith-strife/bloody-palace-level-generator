@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Bloody Palace Deck</title>
+  <style>
+    body { font-family: sans-serif; text-align: center; padding: 20px; }
+    img { max-width: 90vw; margin-top: 20px; }
+    button, select, label { margin: 10px; padding: 10px; font-size: 16px; }
+  </style>
+</head>
+<body>
+  <h1>Bloody Palace Deck Generator</h1>
+
+  <label>Players:
+    <select id="players">
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+    </select>
+  </label>
+
+  <div>
+    <label><input type="checkbox" class="expansion" value="wa"> Walking Arsenal</label>
+    <label><input type="checkbox" class="expansion" value="ao"> Alpha & Omega</label>
+    <label><input type="checkbox" class="expansion" value="wao"> WA + A&O</label>
+  </div>
+
+  <div>
+    <button onclick="newGame()">New Game</button>
+    <button onclick="nextLevel()">Next Level</button>
+  </div>
+
+  <div id="currentLevel"><p>Click "New Game" to start</p></div>
+
+  <script>
+    let manifest = {}, deck = [], idx = 0;
+
+    async function loadManifest() {
+      manifest = await fetch("manifest.json").then(res => res.json());
+    }
+    loadManifest();
+
+    function getRandom(arr) {
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    function getFromLevel(level, exps) {
+      let pool = [...(manifest[level]?.base || [])];
+      for (let exp of exps) {
+        pool.push(...(manifest[level]?.[exp] || []));
+      }
+      return getRandom(pool);
+    }
+
+    function getDeck(players, exps) {
+      let d = [];
+
+      d.push(getFromLevel("starter", exps));
+
+      if (players === 1) {
+        d.push(getFromLevel("level1", exps));
+        d.push(getFromLevel("level2", exps));
+      } else if (players === 2) {
+        d.push(getFromLevel("level2", exps));
+        d.push(getFromLevel("level3", exps));
+      } else if (players === 3) {
+        d.push(getFromLevel("level3", exps));
+        d.push(getFromLevel("level4", exps));
+      } else if (players === 4) {
+        d.push(getFromLevel("level4", exps));
+        d.push(getFromLevel("level5", exps));
+      }
+
+      d.push(getFromLevel("boss", exps));
+      return d;
+    }
+
+    function newGame() {
+      const p = parseInt(document.getElementById("players").value);
+      const exps = [...document.querySelectorAll(".expansion:checked")].map(e => e.value);
+      deck = getDeck(p, exps);
+      idx = 0;
+      show(deck[idx]);
+    }
+
+    function nextLevel() {
+      idx++;
+      if (idx >= deck.length) {
+        document.getElementById("currentLevel").innerHTML = "<p>Game Over</p>";
+      } else {
+        show(deck[idx]);
+      }
+    }
+
+    function show(path) {
+      document.getElementById("currentLevel").innerHTML = `<img src="${path}">`;
+    }
+  </script>
+</body>
+</html>

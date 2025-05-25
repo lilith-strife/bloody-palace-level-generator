@@ -1,0 +1,153 @@
+{
+  "starter": {
+    "base": [
+      "cards/starter/1p_start_1.jpg",
+      "cards/starter/1p_start_2.jpg",
+      "cards/starter/2p_start_1.jpg",
+      "cards/starter/2p_start_2.jpg",
+      "cards/starter/3p_start_1.jpg",
+      "cards/starter/3p_start_2.jpg",
+      "cards/starter/4p_start_1.jpg",
+      "cards/starter/4p_start_2.jpg"
+    ],
+    "wa": [
+      "cards/starter/wa_1p_start_1.jpg",
+      "cards/starter/wa_1p_start_2.jpg",
+      "cards/starter/wa_1p_start_3.jpg",
+      "cards/starter/wa_2p_start_1.jpg",
+      "cards/starter/wa_2p_start_2.jpg",
+      "cards/starter/wa_3p_start_1.jpg",
+      "cards/starter/wa_3p_start_2.jpg",
+      "cards/starter/wa_4p_start_1.jpg",
+      "cards/starter/wa_4p_start_2.jpg"
+    ],
+    "ao": [],
+    "wao": []
+  },
+  "level1": {
+    "base": [
+      "cards/level1/base1.jpg",
+      "cards/level1/base2.jpg",
+      "cards/level1/base3.jpg"
+    ],
+    "wa": [
+      "cards/level1/wa_level1_1.jpg",
+      "cards/level1/wa_level1_2.jpg",
+      "cards/level1/wa_level1_3.jpg",
+      "cards/level1/wa_level1_4.jpg"
+    ],
+    "ao": [
+      "cards/level1/ao_level1_1.jpg",
+      "cards/level1/ao_level1_2.jpg"
+    ],
+    "wao": [
+      "cards/level1/wao_level1_1.jpg",
+      "cards/level1/wao_level_1_2.jpg",
+      "cards/level1/wao_level_1_3.jpg"
+    ]
+  },
+  "level2": {
+    "base": [
+      "cards/level2/base1.jpg",
+      "cards/level2/base2.jpg",
+      "cards/level2/base3.jpg"
+    ],
+    "wa": [
+      "cards/level2/wa_level2_1.jpg",
+      "cards/level2/wa_level2_2.jpg",
+      "cards/level2/wa_level2_3.jpg"
+    ],
+    "ao": [
+      "cards/level2/ao_level2_1.jpg"
+    ],
+    "wao": [
+      "cards/level2/wao_level2_1.jpg",
+      "cards/level2/wao_level2_2.jpg"
+    ]
+  },
+  "level3": {
+    "base": [
+      "cards/level3/base1.jpg",
+      "cards/level3/base2.jpg",
+      "cards/level3/base3.jpg",
+      "cards/level3/base4.jpg"
+    ],
+    "wa": [
+      "cards/level3/wa_level3_1.jpg",
+      "cards/level3/wa_level3_2.jpg",
+      "cards/level3/wa_level3_3.jpg",
+      "cards/level3/wa_level3_4.jpg"
+    ],
+    "ao": [
+      "cards/level3/ao_level_3_1.jpg",
+      "cards/level3/ao_level_3_2.jpg",
+      "cards/level3/ao_level_3_3.jpg"
+    ],
+    "wao": [
+      "cards/level3/wao_level_3_1.jpg",
+      "cards/level3/wao_level_3_2.jpg",
+      "cards/level3/wao_level_3_3.jpg",
+      "cards/level3/wao_level_3_4.jpg"
+    ]
+  },
+  "level4": {
+    "base": [
+      "cards/level4/base1.jpg",
+      "cards/level4/base2.jpg",
+      "cards/level4/base3.jpg"
+    ],
+    "wa": [
+      "cards/level4/wa_level4_1.jpg",
+      "cards/level4/wa_level4_2.jpg",
+      "cards/level4/wa_level4_3.jpg",
+      "cards/level4/wa_level4_4.jpg"
+    ],
+    "ao": [
+      "cards/level4/ao_level4_1.jpg",
+      "cards/level4/ao_level4_2.jpg",
+      "cards/level4/ao_level4_3.jpg"
+    ],
+    "wao": [
+      "cards/level4/wao_level4_1.jpg",
+      "cards/level4/wao_level4_2.jpg"
+    ]
+  },
+  "level5": {
+    "base": [
+      "cards/level5/base1.jpg",
+      "cards/level5/base2.jpg",
+      "cards/level5/base3.jpg"
+    ],
+    "wa": [
+      "cards/level5/wa_level5_1.jpg",
+      "cards/level5/wa_level5_2.jpg",
+      "cards/level5/wa_level5_3.jpg",
+      "cards/level5/wa_level5_4.jpg",
+      "cards/level5/wa_level5_5.jpg"
+    ],
+    "ao": [
+      "cards/level5/ao_level5_ 1.jpg",
+      "cards/level5/ao_level5_2.jpg",
+      "cards/level5/ao_level5_3.jpg",
+      "cards/level5/ao_level5_4.jpg",
+      "cards/level5/ao_level5_5.jpg"
+    ],
+    "wao": [
+      "cards/level5/wao_level5_1.jpg",
+      "cards/level5/wao_level5_2.jpg"
+    ]
+  },
+  "boss": {
+    "base": [
+      "cards/boss/boss1.jpg"
+    ],
+    "wa": [
+      "cards/boss/wa_boss1.jpg"
+    ],
+    "ao": [
+      "cards/boss/ao_boss1.jpg",
+      "cards/boss/ao_boss2.jpg"
+    ],
+    "wao": []
+  }
+}
