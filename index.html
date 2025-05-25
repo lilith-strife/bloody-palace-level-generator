@@ -24,7 +24,10 @@
   <div>
     <label><input type="checkbox" class="expansion" value="wa"> Walking Arsenal</label>
     <label><input type="checkbox" class="expansion" value="ao"> Alpha & Omega</label>
-    <label><input type="checkbox" class="expansion" value="wao"> WA + A&O</label>
+  </div>
+
+  <div>
+    <label><input type="checkbox" id="extendedMode"> Extended Run Mode (AO only)</label>
   </div>
 
   <div>
@@ -46,41 +49,104 @@
       return arr[Math.floor(Math.random() * arr.length)];
     }
 
-    function getFromLevel(level, exps) {
+    function getFromLevel(level, exps, nameIncludes = null) {
       let pool = [...(manifest[level]?.base || [])];
       for (let exp of exps) {
         pool.push(...(manifest[level]?.[exp] || []));
       }
+
+      if (nameIncludes) {
+        pool = pool.filter(x => x.includes(nameIncludes));
+      }
+
       return getRandom(pool);
     }
 
-    function getDeck(players, exps) {
+    function updateExtendedCheckbox() {
+      const aoChecked = [...document.querySelectorAll(".expansion:checked")].some(e => e.value === "ao");
+      const extCheckbox = document.getElementById("extendedMode");
+      extCheckbox.disabled = !aoChecked;
+      if (!aoChecked) extCheckbox.checked = false;
+    }
+
+    document.querySelectorAll(".expansion").forEach(e => {
+      e.addEventListener("change", updateExtendedCheckbox);
+    });
+
+    function getDeck(players, exps, extendedMode = false) {
       let d = [];
 
-      d.push(getFromLevel("starter", exps));
+      const getLevelFor = (lvl) => {
+        if (lvl === 1) return getFromLevel("level1", exps);
+        if (lvl === 2) return getFromLevel("level2", exps);
+        if (lvl === 3) return getFromLevel("level3", exps);
+        if (lvl === 4) return getFromLevel("level4", exps);
+        if (lvl === 5) return getFromLevel("level5", exps);
+      };
 
+      // Get the starter card based on player count
+      d.push(getFromLevel("starter", exps, `${players}p_`));
+
+      let levelA, levelB;
       if (players === 1) {
-        d.push(getFromLevel("level1", exps));
-        d.push(getFromLevel("level2", exps));
+        levelA = getFromLevel("level1", exps);
+        levelB = getFromLevel("level2", exps);
       } else if (players === 2) {
-        d.push(getFromLevel("level2", exps));
-        d.push(getFromLevel("level3", exps));
+        levelA = getFromLevel("level2", exps);
+        levelB = getFromLevel("level3", exps);
       } else if (players === 3) {
-        d.push(getFromLevel("level3", exps));
-        d.push(getFromLevel("level4", exps));
+        levelA = getFromLevel("level3", exps);
+        levelB = getFromLevel("level4", exps);
       } else if (players === 4) {
-        d.push(getFromLevel("level4", exps));
-        d.push(getFromLevel("level5", exps));
+        levelA = getFromLevel("level4", exps);
+        levelB = getFromLevel("level5", exps);
       }
 
+      d.push(levelA);
+      d.push(levelB);
       d.push(getFromLevel("boss", exps));
+
+      if (extendedMode && exps.includes("ao")) {
+        d.push("cards/boss/boss1.jpg");
+
+        let usedLevels = [levelA, levelB];
+        let nextLevel;
+        do {
+          nextLevel = players === 1 ? getFromLevel("level2", exps) :
+                      players === 2 ? getFromLevel("level3", exps) :
+                      players === 3 ? getFromLevel("level4", exps) :
+                                      getFromLevel("level5", exps);
+        } while (usedLevels.includes(nextLevel));
+        d.push(nextLevel);
+
+        d.push("cards/boss/ao_boss2.jpg");
+
+        let nextLevel2;
+        do {
+          nextLevel2 = players === 1 ? getFromLevel("level2", exps) :
+                       players === 2 ? getFromLevel("level3", exps) :
+                       players === 3 ? getFromLevel("level4", exps) :
+                                       getFromLevel("level5", exps);
+        } while (usedLevels.includes(nextLevel2) || nextLevel2 === nextLevel);
+        d.push(nextLevel2);
+
+        d.push("cards/boss/ao_boss1.jpg");
+      }
+
       return d;
     }
 
     function newGame() {
       const p = parseInt(document.getElementById("players").value);
-      const exps = [...document.querySelectorAll(".expansion:checked")].map(e => e.value);
-      deck = getDeck(p, exps);
+      let exps = [...document.querySelectorAll(".expansion:checked")].map(e => e.value);
+
+      // Add WAO automatically if both WA and AO are selected
+      if (exps.includes("wa") && exps.includes("ao")) {
+        exps.push("wao");
+      }
+
+      const extended = document.getElementById("extendedMode").checked;
+      deck = getDeck(p, exps, extended);
       idx = 0;
       show(deck[idx]);
     }
