@@ -79,6 +79,18 @@
       e.addEventListener("change", updateExtendedCheckboxes);
     });
 
+    document.getElementById("extendedMode").addEventListener("change", () => {
+      if (document.getElementById("extendedMode").checked) {
+        document.getElementById("hyperextendedMode").checked = false;
+      }
+    });
+
+    document.getElementById("hyperextendedMode").addEventListener("change", () => {
+      if (document.getElementById("hyperextendedMode").checked) {
+        document.getElementById("extendedMode").checked = false;
+      }
+    });
+
     function getDeck(players, exps, extended, hyperextended) {
       let d = [];
 
@@ -108,8 +120,19 @@
       d.push(levelA);
       d.push(levelB);
 
-      // Initial boss always boss1.jpg in Extended & Hyperextended
-      d.push("cards/boss/boss1.jpg");
+      // Boss logic
+      if (hyperextended || extended) {
+        d.push("cards/boss/boss1.jpg");
+      } else {
+        let bosses = ["cards/boss/boss1.jpg"];
+        if (exps.includes("ao")) {
+          bosses.push("cards/boss/ao_boss1.jpg", "cards/boss/ao_boss2.jpg");
+        }
+        if (exps.includes("wa")) {
+          bosses.push("cards/boss/wa_boss1.jpg");
+        }
+        d.push(getRandom(bosses));
+      }
 
       if (hyperextended) {
         const used = [levelA, levelB];
